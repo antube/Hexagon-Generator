@@ -164,7 +164,10 @@ namespace Hexagons
         //Timers///////////////////////////////////////////////////////
         private void Refresh_Timer_Tick(object sender, EventArgs e)
         {
+            //Refresh the picturebox and check to see if anymore points need to be generated
             pictureBox1.Refresh();
+            
+            //Move every point forward and then check the position
             for ( int i = 0; i < points.Count; i++)
             {
                 points[i].Present_X += points[i].Change_X;
@@ -172,6 +175,7 @@ namespace Hexagons
                 Check_Direction(i);
             }
 
+            //Check if any points need to be generated
             if (points.Count < 50)
             {
                 generate();
@@ -180,6 +184,7 @@ namespace Hexagons
         }
         private void Check_Timer_Tick(object sender, EventArgs e)
         {
+            //Check to make sure that there are no copies of any lines
             Check_Overlap();
             /*Thread.MemoryBarrier();
             Thread.BeginCriticalRegion();
@@ -191,11 +196,13 @@ namespace Hexagons
         //MenuStrip Items//////////////////////////////////////////////////////////
         private void restartToolStripMenuItem_Click(object sender, EventArgs e)
         {
+            //Manuel Restart of the drawing.
             lines.Clear();
             points.Clear();
         }
         private void dotsToolStripMenuItem_Click(object sender, EventArgs e)
         {
+            //Turn ON or OFF the dots and make sure that the lines are not OFF when the dots are OFF
             if (Points_ON && Lines_ON)
             {
                 Points_ON = false;
@@ -213,6 +220,7 @@ namespace Hexagons
         }
         private void linesToolStripMenuItem_Click(object sender, EventArgs e)
         {
+            //Turn ON or OFF the lines and make sure that the dots are not OFF when the lines are OFF
             if (Lines_ON && Points_ON)
             {
                 Lines_ON = false;
@@ -233,8 +241,10 @@ namespace Hexagons
         //Personal Methods/////////////////////////
         private void Check_Direction(int Index)
         {
+            //Check to see if the point is 30 pixels  away from last turn
             if (math.Distance(points[Index].Present_X, points[Index].Present_Y, points[Index].Last_X, points[Index].Last_Y) >= 30)
             {
+                //If so choose a new random direction based off of the previous direction
                 Random random = new Random();
                 double choice = random.NextDouble();
                 switch ((int)points[Index].Change_Y)
@@ -287,28 +297,34 @@ namespace Hexagons
             {
                 for (int i2 = 0; i2 < lines.Count; i2++)
                 {
+                    //Check to see if the two lines are overlapping in the same direction
                     if (i1 != i2 &&
                         lines[i1].X1 == lines[i2].X1 &&
                         lines[i1].Y1 == lines[i2].Y1 &&
                         lines[i1].X2 == lines[i2].X2 &&
                         lines[i1].Y2 == lines[i2].Y2)
                     {
+                        //If so delete line
                         lines.RemoveAt(i2);
                         i2--;
                         //For Testing Purposes to see if prevention algorithm works
                         //MessageBox.Show("Detected a Copy");
                     }
+                    //Check to see if the two lines are overlapping in the opposite direction
                     else if (i1 != i2 &&
                         lines[i1].X1 == lines[i2].X2 &&
                         lines[i1].Y1 == lines[i2].Y2 &&
                         lines[i1].X2 == lines[i2].X1 &&
                         lines[i1].Y2 == lines[i2].Y1)
                     {
+                        //If so delete line
                         lines.RemoveAt(i2);
                         i2--;
                         //MessageBox.Show("Detected a Copy");
                     }
                 }
+                //If the first for loop is half way through the list break since all of the lines
+                //will have been checked.
                 if (i1 >= lines.Count / 2)
                 {
                     break;
@@ -346,6 +362,7 @@ namespace Hexagons
         }
         private void generate()
         {
+            //Generate a point at the Generation location
             Random random = new Random();
             int change = random.Next(start_directions.Count - 1);
             points.Add(new point
