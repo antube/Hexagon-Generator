@@ -51,6 +51,7 @@
             this.pictureBox1.TabIndex = 0;
             this.pictureBox1.TabStop = false;
             this.pictureBox1.Paint += new System.Windows.Forms.PaintEventHandler(this.pictureBox1_Paint);
+            this.pictureBox1.DoubleClick += new System.EventHandler(this.pictureBox1_DoubleClick);
             // 
             // Refresh_Timer
             // 
@@ -92,7 +93,7 @@
             // 
             this.linesToolStripMenuItem.CheckOnClick = true;
             this.linesToolStripMenuItem.Name = "linesToolStripMenuItem";
-            this.linesToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.linesToolStripMenuItem.Size = new System.Drawing.Size(101, 22);
             this.linesToolStripMenuItem.Text = "Lines";
             this.linesToolStripMenuItem.Click += new System.EventHandler(this.linesToolStripMenuItem_Click);
             // 
@@ -102,7 +103,7 @@
             this.dotsToolStripMenuItem.CheckOnClick = true;
             this.dotsToolStripMenuItem.CheckState = System.Windows.Forms.CheckState.Checked;
             this.dotsToolStripMenuItem.Name = "dotsToolStripMenuItem";
-            this.dotsToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.dotsToolStripMenuItem.Size = new System.Drawing.Size(101, 22);
             this.dotsToolStripMenuItem.Text = "Dots";
             this.dotsToolStripMenuItem.Click += new System.EventHandler(this.dotsToolStripMenuItem_Click);
             // 
@@ -120,10 +121,10 @@
             this.Controls.Add(this.pictureBox1);
             this.Controls.Add(this.menuStrip1);
             this.DoubleBuffered = true;
+            this.Location = new System.Drawing.Point(50, 50);
             this.MainMenuStrip = this.menuStrip1;
             this.Name = "Form1";
             this.Text = "Hexagons";
-            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.Form1_FormClosing);
             this.SizeChanged += new System.EventHandler(this.Form1_SizeChanged);
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
             this.menuStrip1.ResumeLayout(false);
