@@ -63,7 +63,7 @@ namespace Hexagons
     {
         //List of Drawing points
         public List<point> points = new List<point>() { };
-        //List of Directions in Which the points can start when generated
+        //List of directions in which the points can start when generated
         public List<start> start_directions = new List<start>()
         {
             new start { Change_X = -2, Change_Y = 2},
@@ -76,7 +76,7 @@ namespace Hexagons
 
         //Whether the User wants the Lines On
         //By Default OFF
-        public bool Lines_ON = false;
+        public bool Lines_ON = true;
         
         //Whether the User wants the Points On
         //By Default ON
@@ -132,7 +132,10 @@ namespace Hexagons
                 //If the Point is outside of the bounds of the screen Destroy it
                 else
                 {
-                    lines.Add(new line { X1 = points[i].Last_X, X2 = points[i].Present_X, Y1 = points[i].Last_Y, Y2 = points[i].Present_Y });
+                    if(points[i].add)
+                    {
+                        lines.Add(new line { X1 = points[i].Last_X, X2 = points[i].Present_X, Y1 = points[i].Last_Y, Y2 = points[i].Present_Y });
+                    }
                     points.RemoveAt(i);
                     i--;
                 }
@@ -281,10 +284,13 @@ namespace Hexagons
                         break;
 
                 }
-                lines.Add(new line { X1 = points[Index].Last_X, X2 = points[Index].Present_X, Y1 = points[Index].Last_Y, Y2 = points[Index].Present_Y });
+                if(points[Index].add)
+                {
+                    lines.Add(new line { X1 = points[Index].Last_X, X2 = points[Index].Present_X, Y1 = points[Index].Last_Y, Y2 = points[Index].Present_Y });
+                }
                 points[Index].Last_X = points[Index].Present_X;
                 points[Index].Last_Y = points[Index].Present_Y;
-                //Prevent_Overlap(Index);
+                Prevent_Overlap(Index);
             }
             else
             {
@@ -339,8 +345,8 @@ namespace Hexagons
                 //Checking to see if there is a line in the same direction as travel
                 if (lines[i].X1 == points[Index].Last_X
                     && lines[i].Y1 == points[Index].Last_Y
-                    && lines[i].X2 == point.X
-                    && lines[i].Y2 == point.Y)
+                    && (lines[i].X2 == point.X || lines[i].X2 == point.X + 1)
+                    && (lines[i].Y2 == point.Y || lines[i].Y2 == point.Y + 1))
                 {
                     points[Index].add = false;
                     break;
@@ -348,8 +354,8 @@ namespace Hexagons
                 //Check to see if there is a line in the opposite Direction as travel
                 else if (lines[i].X2 == points[Index].Last_X
                         && lines[i].Y2 == points[Index].Last_Y
-                        && lines[i].X1 == point.X
-                        && lines[i].Y1 == point.Y)
+                        && (lines[i].X1 == point.X || lines[i].X1 == point.X + 1)
+                        && (lines[i].Y1 == point.Y || lines[i].Y1 == point.Y + 1))
                 {
                     points[Index].add = false;
                     break;
@@ -395,7 +401,7 @@ namespace Hexagons
             return distance;
         }
         
-        public static Point Next_Position(double X, double Y, double Change_X, double Change_Y, double Distance)
+        public static Point Next_Position(float X, float Y, float Change_X, float Change_Y, float Distance)
         {
             Point point = new Point();
             if (Change_Y == 0 && Change_X > 0)
@@ -411,28 +417,33 @@ namespace Hexagons
             else
             {
                 double hypotineos = Distance * Distance;
-                double Change = Math.Sqrt(hypotineos) / 2;
+                double Change = Math.Sqrt(hypotineos / 2);
+                double NX = 0;
+                double NY = 0;
                 if (Change_X > 0 && Change_Y > 0)
                 {
-                    point.X = Convert.ToInt32(X + Change);
-                    point.Y = Convert.ToInt32(Y + Change);
+                    NX = Convert.ToInt32(X + Change);
+                    NY = Convert.ToInt32(Y + Change);
                 }
                 else if (Change_X > 0 && Change_Y < 0)
                 {
-                    point.X = Convert.ToInt32(X + Change);
-                    point.Y = Convert.ToInt32(Y - Change);
+                    NX = Convert.ToInt32(X + Change);
+                    NY = Convert.ToInt32(Y - Change);
                 }
                 else if (Change_X < 0 && Change_Y > 0)
                 {
-                    point.X = Convert.ToInt32(X - Change);
-                    point.Y = Convert.ToInt32(Y + Change);
+                    NX = Convert.ToInt32(X - Change);
+                    NY = Convert.ToInt32(Y + Change);
                 }
                 else if (Change_X < 0 && Change_Y < 0)
                 {
-                    point.X = Convert.ToInt32(X - Change);
-                    point.Y = Convert.ToInt32(Y - Change);
+                    NX = X - Change;
+                    NY = Y - Change;
                 }
+                point.X = (int)NX;
+                point.Y = (int)NY;
             }
+
             return point;
         }
     }
